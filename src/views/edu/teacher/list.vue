@@ -1,0 +1,159 @@
+<template>
+  <div class="app-container">
+    <h1>讲师列表</h1>
+    <!-- https://element.eleme.cn/#/zh-CN/component/table el-table -->
+    <el-table
+      v-loading="listLoading"
+      :data="list"
+      element-loading-text="Loading"
+      border
+      fit
+      highlight-current-row
+    >
+      <el-table-column align="center" label="ID" width="70">
+        <template slot-scope="scope">
+          {{ (page - 1) * limit + scope.$index + 1 }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Name" align="center">
+        <template slot-scope="scope">
+          <!-- scope代表整表数据 row代表一行 name为此行的属性-->
+          <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="头衔" width="80" align="center">
+        <template slot-scope="scope">
+          <!-- == 判断值 ===判断值和类型 -->
+          {{ scope.row.level === 1 ? "高级讲师" : "首席讲师" }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Intro" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.intro }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Career" width="110" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.career }}
+        </template>
+      </el-table-column>
+      <!-- <el-table-column
+        class-name="status-col"
+        label="level"
+        width="110"
+        align="center"
+      >
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.level | statusFilter">{{
+            scope.row.level
+          }}</el-tag>
+        </template>
+      </el-table-column> -->
+
+      <el-table-column
+        align="center"
+        prop="created_at"
+        label="Display_time"
+        width="200"
+      >
+        <template slot-scope="scope">
+          <i class="el-icon-time" />
+          <span>{{ scope.row.gmtCreate }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="updated_at"
+        label="Updated_time"
+        width="200"
+      >
+        <template slot-scope="scope">
+          <i class="el-icon-time" />
+          <span>{{ scope.row.gmtModified }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="sort" label="排序" width="60" />
+      <el-table-column label="操作" width="200" align="center">
+        <template slot-scope="scope">
+          <router-link :to="'/edu/teacher/edit/' + scope.row.id">
+            <el-button type="primary" size="mini" icon="el-icon-edit"
+              >修改</el-button
+            >
+          </router-link>
+          <el-button
+            type="danger"
+            size="mini"
+            icon="el-icon-delete"
+            @click="removeDataById(scope.row.id)"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- 分页  -->
+    <!-- v-on: 简写@ -->
+    <el-pagination
+      background
+      :current-page="page"
+      :page-size="limit"
+      :total="total"
+      style="padding: 30px 0; text-align: right;"
+      layout="total, prev, pager, next, jumper"
+      @current-change="getList"
+    />
+  </div>
+</template>
+
+<script>
+//@是webpack配置的路径别名
+import teacher from "@/api/edu/teacher";
+
+export default {
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        published: "success",
+        draft: "gray",
+        deleted: "danger"
+      };
+      return statusMap[status];
+    }
+  },
+  // : 和() 都可以  组件中必须写成()组件数据才独立
+  data() {
+    //定义变量初始值
+    return {
+      list: null, //查询之后接口返回集合
+      listLoading: true,
+      page: 1,
+      limit: 2,
+      total: 0,
+      teacherList: {}
+    };
+  },
+  created() {
+    //页面渲染之前执行一般调用method里面的方法
+    this.getList();
+  },
+  methods: {
+    //创建具体方法,调用teacher.js里面定义的方法
+    //讲师列表
+    getList(page = 1) {
+      this.page = page;
+      this.listLoading = true;
+
+      teacher
+        .getTeacherList(this.page, this.limit, this.teacherList)
+        .then(response => {
+          console.log(response);
+          this.list = response.data.items;
+          this.total = response.data.total;
+          this.listLoading = false;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }
+};
+</script>
