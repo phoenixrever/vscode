@@ -9,15 +9,13 @@ export default {
       //json data表示 把对象转换成json进行传递到接口里面
       data: teacherquery
     });
+  },
+  deleteTeacherById(id) {
+    return request({
+      url: `/serviceEdu/teacher/delete/${id}`,
+      method: "delete"
+    });
   }
-  // getTeacherLsit: (currentPage, limit, teacherquery) => {
-  //   return request({
-  //     url: `/serviceEdu/teacher/pageCondition/${currentPage}/${limit}`,
-  //     method: "get",
-  //     //json data表示 把对象转换成json进行传递到接口里面
-  //     data: teacherquery
-  //   });
-  // }
 };
 
 // export function getLsit(params) {

@@ -2,6 +2,7 @@
   <div class="app-container">
     <h1>讲师列表</h1>
     <!-- https://element.eleme.cn/#/zh-CN/component/table el-table -->
+    <searchform @searchParam="searchParam"></searchform>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -29,7 +30,7 @@
       </el-table-column>
       <el-table-column label="Intro" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.intro }}</span>
+          <span>{{ scope.row.intro.length>20?scope.row.intro.substring(0,20)+"...":scope.row.intro}}</span>
         </template>
       </el-table-column>
       <el-table-column label="Career" width="110" align="center">
@@ -84,7 +85,7 @@
             type="danger"
             size="mini"
             icon="el-icon-delete"
-            @click="removeDataById(scope.row.id)"
+            @click="removeDataById(scope.row.id,$event)"
             >删除</el-button
           >
         </template>
@@ -107,17 +108,20 @@
 <script>
 //@是webpack配置的路径别名
 import teacher from "@/api/edu/teacher";
-
+import searchform from './searchform'
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: "success",
-        draft: "gray",
-        deleted: "danger"
-      };
-      return statusMap[status];
-    }
+  // filters: {
+  //   statusFilter(status) {
+  //     const statusMap = {
+  //       published: "success",
+  //       draft: "gray",
+  //       deleted: "danger"
+  //     };
+  //     return statusMap[status];
+  //   }
+  // },
+  components:{
+    searchform
   },
   // : 和() 都可以  组件中必须写成()组件数据才独立
   data() {
@@ -138,6 +142,23 @@ export default {
   methods: {
     //创建具体方法,调用teacher.js里面定义的方法
     //讲师列表
+    searchParam(teacherList){
+      this.teacherList=teacherList
+      this.getList();
+    },
+    removeDataById(id,event){
+       let target = event.target;
+        if(target.nodeName == "SPAN"){
+            target = event.target.parentNode;
+        }
+        target.blur()
+      teacher.deleteTeacherById(id)
+      .then(response=>{
+        this.getList()
+      }).catch(error=>{
+        console.log(error)
+      })
+    },
     getList(page = 1) {
       this.page = page;
       this.listLoading = true;
