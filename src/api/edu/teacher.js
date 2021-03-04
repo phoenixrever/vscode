@@ -15,6 +15,26 @@ export default {
       url: `/serviceEdu/teacher/delete/${id}`,
       method: "delete"
     });
+  },
+  addTeacher(teacher) {
+    return request({
+      url: `/serviceEdu/teacher/addTeacher`,
+      method: "post",
+      data: teacher
+    });
+  },
+  editTeacher(teacher) {
+    return request({
+      url: `/serviceEdu/teacher/updateTeacher`,
+      method: "post",
+      data: teacher
+    });
+  },
+  validateUniqueName(name) {
+    return request({
+      url: `/serviceEdu/teacher/validateUniqueName/${name}`,
+      method: "get"
+    });
   }
 };
 
