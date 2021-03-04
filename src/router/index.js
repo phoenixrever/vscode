@@ -60,6 +60,21 @@ export const constantRouterMap = [
         name: "添加讲师",
         component: () => import("@/views/edu/teacher/save"),
         meta: { title: "添加讲师", icon: "tree" }
+      },
+      // created() {
+      // 判断当前路径是否包含id的参数(/:id)
+      //   console.log('created')
+      //   if (this.$route.params && this.$route.params.id) {
+      //     const id = this.$route.params.id
+      //     this.fetchDataById(id)
+      //   }
+      // }
+      {
+        path: "edit/:id", //:和react的:id 一样
+        name: "EduTeacherEdit",
+        component: () => import("@/views/edu/teacher/save"),
+        meta: { title: "编辑讲师", noCache: true },
+        hidden: true //隐藏此路由
       }
     ]
   },

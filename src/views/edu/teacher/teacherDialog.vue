@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+  <el-dialog title="收货地址" :visible.sync="dialogFormVisible"  @close="handleClose">
     <el-scrollbar style="max-height:450px;">
       <div style="padding:0 20px;">
         <el-form
@@ -11,7 +11,7 @@
           size="small"
         >
           <el-form-item label="讲师名称" prop="name">
-            <el-input v-model="teacher.name" />
+            <el-input v-model="teacher.name" :disabled="edit"/>
           </el-form-item>
           <el-form-item label="讲师排序">
             <el-input-number
@@ -58,7 +58,7 @@
     <div slot="footer" class="dialog-footer">
       <el-button
         @click="
-          (dialogFormVisible = false), (teacher = {}), resetForm('ruleteacher')
+          dialogFormVisible = false
         "
         >取 消</el-button
       >
@@ -88,7 +88,11 @@ export default {
   },
   data() {
     var validateName = (rule, value, callback) => {
-      validateUnqueName(value, callback);
+      if(this.edit===false){
+        this.validateUniqueName(value, callback);
+      }else{
+        callback()
+      }
     };
     return {
       edit: false,
@@ -117,6 +121,11 @@ export default {
     };
   },
   methods: {
+    handleClose(){
+      this.teacher = {}
+      this.resetForm('ruleteacher')
+      console.log("close")
+    },
     addTeacher(ruleteacher) {
       this.$refs[ruleteacher].validate(valid => {
         if (valid) {
@@ -131,7 +140,7 @@ export default {
               }
               this.loading = false;
               this.dialogFormVisible = false;
-              this.resetForm("ruleteacher");
+              // this.resetForm("ruleteacher");
               this.buttontext = "确定";
               this.$message({
                 message: "添加成功",
@@ -160,14 +169,15 @@ export default {
           teacherapi
             .editTeacher(this.teacher)
             .then(response => {
-              this.teacher = {};
+              // this.teacher = {};
+              console.log("get lsit")
               if (this.getList) {
                 this.getList();
               }
               this.loading = false;
               this.dialogFormVisible = false;
               this.buttontext = "确定";
-              this.resetForm("ruleteacher");
+              // this.resetForm("ruleteacher");
               this.$message({
                 message: "修改成功",
                 type: "success"
@@ -189,15 +199,16 @@ export default {
     resetForm(ruleteacher) {
       this.$refs[ruleteacher].resetFields();
     },
-    validateUnqueName(value, callback) {
+    validateUniqueName(value, callback) {
       teacherapi
-        .validateUnqueName(value)
+        .validateUniqueName(value)
         .then(response => {
           console.log(response);
           callback();
         })
         .catch(error => {
           console.log(error);
+          callback(new Error('用戶名已存在'));
         });
     }
   }

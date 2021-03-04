@@ -226,10 +226,14 @@ export default {
       addTeacherDialog.dialogFormVisible = true;
     },
     editTeacher(rowteacher) {
+      console.log(this.list)
       const editTeacherDialog = this.$refs.teacherDialog;
       editTeacherDialog.dialogFormVisible = true;
       editTeacherDialog.edit = true;
-      editTeacherDialog.teacher = rowteacher;
+      // editTeacherDialog.teacher = JSON.parse(JSON.stringify(rowteacher));
+      // 使用对象拓展运算符，拷贝对象，而不是引用，
+      // 否则新增一条记录后，defaultForm就变成了之前新增的teacher的值
+      editTeacherDialog.teacher = { ...rowteacher }
     },
     routejump() {
       this.$router.push({ path: "/teacher/save" });
