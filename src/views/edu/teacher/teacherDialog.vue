@@ -1,5 +1,9 @@
 <template>
-  <el-dialog title="收货地址" :visible.sync="dialogFormVisible"  @close="handleClose">
+  <el-dialog
+    title="收货地址"
+    :visible.sync="dialogFormVisible"
+    @close="handleClose"
+  >
     <el-scrollbar style="max-height:450px;">
       <div style="padding:0 20px;">
         <el-form
@@ -11,7 +15,7 @@
           size="small"
         >
           <el-form-item label="讲师名称" prop="name">
-            <el-input v-model="teacher.name" :disabled="edit"/>
+            <el-input v-model="teacher.name" :disabled="edit" />
           </el-form-item>
           <el-form-item label="讲师排序">
             <el-input-number
@@ -56,15 +60,11 @@
     </el-scrollbar>
 
     <div slot="footer" class="dialog-footer">
-      <el-button
-        @click="
-          dialogFormVisible = false
-        "
-        >取 消</el-button
-      >
+      <el-button @click="dialogFormVisible = false">取 消</el-button>
       <el-button
         type="primary"
         :loading="loading"
+        :disabled="disabled"
         @click="edit ? editTeacher('ruleteacher') : addTeacher('ruleteacher')"
         >{{ buttontext }}</el-button
       >
@@ -88,10 +88,10 @@ export default {
   },
   data() {
     var validateName = (rule, value, callback) => {
-      if(this.edit===false){
+      if (this.edit === false) {
         this.validateUniqueName(value, callback);
-      }else{
-        callback()
+      } else {
+        callback();
       }
     };
     return {
@@ -102,6 +102,7 @@ export default {
       formLabelWidth: "120px",
       buttontext: "确定",
       loading: false,
+      disabled: false,
       teacher: {
         level: 1
       },
@@ -121,40 +122,41 @@ export default {
     };
   },
   methods: {
-    handleClose(){
-      this.teacher = {}
-      this.resetForm('ruleteacher')
-      console.log("close")
+    handleClose() {
+      this.teacher = {};
+      this.resetForm("ruleteacher");
+      console.log("close");
     },
     addTeacher(ruleteacher) {
       this.$refs[ruleteacher].validate(valid => {
         if (valid) {
           this.loading = true;
           this.buttontext = "执行中";
-          teacherapi
-            .addTeacher(this.teacher)
-            .then(response => {
-              console.log(response);
-              if (this.getList) {
-                this.getList();
-              }
-              this.loading = false;
-              this.dialogFormVisible = false;
-              // this.resetForm("ruleteacher");
-              this.buttontext = "确定";
-              this.$message({
-                message: "添加成功",
-                type: "success"
+          (this.disabled = true),
+            teacherapi
+              .addTeacher(this.teacher)
+              .then(response => {
+                console.log(response);
+                if (this.getList) {
+                  this.getList();
+                }
+                this.loading = false;
+                (this.disabled = false), (this.dialogFormVisible = false);
+                // this.resetForm("ruleteacher");
+                this.buttontext = "确定";
+                this.$message({
+                  message: "添加成功",
+                  type: "success"
+                });
+              })
+              .catch(error => {
+                console.log(error.message);
+                console.log("-------------");
+                this.loading = false;
+                this.dialogFormVisible = false;
+                this.buttontext = "确定";
+                this.$message.error("错了哦，这是一条错误消息");
               });
-            })
-            .catch(error => {
-              console.log(error.message);
-              console.log("-------------");
-              this.loading = false;
-              this.dialogFormVisible = false;
-              this.buttontext = "确定";
-              this.$message.error("错了哦，这是一条错误消息");
-            });
         } else {
           console.log("error submit!!");
           return false;
@@ -170,7 +172,7 @@ export default {
             .editTeacher(this.teacher)
             .then(response => {
               // this.teacher = {};
-              console.log("get lsit")
+              console.log("get lsit");
               if (this.getList) {
                 this.getList();
               }
@@ -208,7 +210,7 @@ export default {
         })
         .catch(error => {
           console.log(error);
-          callback(new Error('用戶名已存在'));
+          callback(new Error("用戶名已存在"));
         });
     }
   }
