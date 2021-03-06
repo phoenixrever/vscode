@@ -14,6 +14,12 @@
           label-width="120px"
           size="small"
         >
+          <el-row type="flex" class="row-bg" justify="center">
+            <span style="cursor:pointer" @click="changAvatar"
+              ><avatar username="Jane Doe" :src="teacher.avatar"></avatar
+            ></span>
+          </el-row>
+
           <el-form-item label="讲师名称" prop="name">
             <el-input v-model="teacher.name" :disabled="edit" />
           </el-form-item>
@@ -75,15 +81,32 @@
 .el-scrollbar__wrap {
   overflow-x: hidden !important;
 }
+.row-bg {
+  margin: 0 0 15px 0;
+}
 </style>
 <script>
 import teacherapi from "@/api/edu/teacher";
+import Avatar from "vue-avatar";
 
 export default {
+  components: {
+    Avatar
+  },
   props: {
     getList: {
       type: Function,
       default: null
+    },
+    teacherDialogSrc: {
+      type: String
+    }
+  },
+  watch: {
+    //watch props的值
+    teacherDialogSrc(val) {
+      this.teacher.avatar = this.teacherDialogSrc;
+      console.log(this.teacher.avatar);
     }
   },
   data() {
@@ -104,7 +127,8 @@ export default {
       loading: false,
       disabled: false,
       teacher: {
-        level: 1
+        level: 1,
+        avatar: this.teacherDialogSrc
       },
       rules: {
         name: [
@@ -123,9 +147,15 @@ export default {
   },
   methods: {
     handleClose() {
-      this.teacher = {};
       this.resetForm("ruleteacher");
-      console.log("close");
+      this.teacher = {
+        level: 1,
+        avatar: "" //千万不要是null 导致子组件头像不更新
+      };
+    },
+    changAvatar() {
+      console.log("change");
+      this.$emit("openAvatarDialog");
     },
     addTeacher(ruleteacher) {
       this.$refs[ruleteacher].validate(valid => {
@@ -142,7 +172,6 @@ export default {
                 }
                 this.loading = false;
                 (this.disabled = false), (this.dialogFormVisible = false);
-                // this.resetForm("ruleteacher");
                 this.buttontext = "确定";
                 this.$message({
                   message: "添加成功",
@@ -179,7 +208,6 @@ export default {
               this.loading = false;
               this.dialogFormVisible = false;
               this.buttontext = "确定";
-              // this.resetForm("ruleteacher");
               this.$message({
                 message: "修改成功",
                 type: "success"

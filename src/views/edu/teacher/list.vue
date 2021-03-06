@@ -14,7 +14,17 @@
     <el-button type="info" @click="routejump" style="margin-bottom:20px"
       >路由跳转点击演示</el-button
     >
-    <teacherDialog ref="teacherDialog" :getList="getList"></teacherDialog>
+    <avatardialog
+      ref="avatardialog"
+      @changeAvatarSrc="changeAvatarSrc"
+      :avatardialogSrc="avatarSrc"
+    ></avatardialog>
+    <teacherDialog
+      ref="teacherDialog"
+      :getList="getList"
+      :teacherDialogSrc="avatarSrc"
+      @openAvatarDialog="openAvatarDialog"
+    ></teacherDialog>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -131,6 +141,7 @@
 import teacher from "@/api/edu/teacher";
 import searchform from "./searchform";
 import teacherDialog from "./teacherDialog";
+import avatardialog from "./avatardialog";
 
 export default {
   // filters: {
@@ -145,7 +156,8 @@ export default {
   // },
   components: {
     searchform,
-    teacherDialog
+    teacherDialog,
+    avatardialog
   },
   // : 和() 都可以  组件中必须写成()组件数据才独立
   data() {
@@ -156,7 +168,9 @@ export default {
       page: 1,
       limit: 3,
       total: 0,
-      teacherList: {}
+      teacherList: {},
+      avatarSrc:
+        "https://phoenixhell.oss-cn-shanghai.aliyuncs.com/2021/03/05/46ae2a8cacb8410385a1e018279a3cae.jpg"
     };
   },
   created() {
@@ -226,17 +240,24 @@ export default {
       addTeacherDialog.dialogFormVisible = true;
     },
     editTeacher(rowteacher) {
-      console.log(this.list)
+      console.log(this.list);
       const editTeacherDialog = this.$refs.teacherDialog;
       editTeacherDialog.dialogFormVisible = true;
       editTeacherDialog.edit = true;
       // editTeacherDialog.teacher = JSON.parse(JSON.stringify(rowteacher));
       // 使用对象拓展运算符，拷贝对象，而不是引用，
       // 否则新增一条记录后，defaultForm就变成了之前新增的teacher的值
-      editTeacherDialog.teacher = { ...rowteacher }
+      editTeacherDialog.teacher = { ...rowteacher };
     },
     routejump() {
       this.$router.push({ path: "/teacher/save" });
+    },
+    openAvatarDialog() {
+      const avatardialog = this.$refs.avatardialog;
+      avatardialog.dialogVisible = true;
+    },
+    changeAvatarSrc(avatarSrc) {
+      this.avatarSrc = avatarSrc;
     }
   }
 };
