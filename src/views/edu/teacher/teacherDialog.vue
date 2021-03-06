@@ -1,9 +1,5 @@
 <template>
-  <el-dialog
-    title="收货地址"
-    :visible.sync="dialogFormVisible"
-    @close="handleClose"
-  >
+  <el-dialog title="收货地址" :visible.sync="dialogFormVisible" @close="handleClose">
     <el-scrollbar style="max-height:450px;">
       <div style="padding:0 20px;">
         <el-form
@@ -15,27 +11,23 @@
           size="small"
         >
           <el-row type="flex" class="row-bg" justify="center">
-            <span style="cursor:pointer" @click="changAvatar"
-              ><avatar username="Jane Doe" :src="teacher.avatar"></avatar
-            ></span>
+            <span style="cursor:pointer" @click="changAvatar">
+              <avatar username="Jane Doe" :src="teacher.avatar"></avatar>
+            </span>
           </el-row>
 
           <el-form-item label="讲师名称" prop="name">
             <el-input v-model="teacher.name" :disabled="edit" />
           </el-form-item>
           <el-form-item label="讲师排序">
-            <el-input-number
-              v-model="teacher.sort"
-              controls-position="right"
-              :min="0"
-            />
+            <el-input-number v-model="teacher.sort" controls-position="right" :min="0" />
           </el-form-item>
           <el-form-item label="讲师头衔" prop="level">
             <el-select v-model="teacher.level" clearable placeholder="请选择">
               <!--
             数据类型一定要和取出的json中的一致，否则没法回填
             因此，这里value使用动态绑定的值，保证其数据类型是number
-          -->
+              -->
               <el-option :value="1" label="高级讲师" />
               <el-option :value="2" label="首席讲师" />
             </el-select>
@@ -60,7 +52,7 @@
             @click="saveOrUpdate"
             >保存</el-button
           >
-        </el-form-item> -->
+          </el-form-item>-->
         </el-form>
       </div>
     </el-scrollbar>
@@ -72,8 +64,7 @@
         :loading="loading"
         :disabled="disabled"
         @click="edit ? editTeacher('ruleteacher') : addTeacher('ruleteacher')"
-        >{{ buttontext }}</el-button
-      >
+      >{{ buttontext }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -104,12 +95,12 @@ export default {
   },
   watch: {
     //watch props的值
-    teacherDialogSrc(val) {
+    teacherDialogSrc (val) {
       this.teacher.avatar = this.teacherDialogSrc;
       console.log(this.teacher.avatar);
     }
   },
-  data() {
+  data () {
     var validateName = (rule, value, callback) => {
       if (this.edit === false) {
         this.validateUniqueName(value, callback);
@@ -146,18 +137,18 @@ export default {
     };
   },
   methods: {
-    handleClose() {
+    handleClose () {
       this.resetForm("ruleteacher");
       this.teacher = {
         level: 1,
         avatar: "" //千万不要是null 导致子组件头像不更新
       };
     },
-    changAvatar() {
+    changAvatar () {
       console.log("change");
       this.$emit("openAvatarDialog");
     },
-    addTeacher(ruleteacher) {
+    addTeacher (ruleteacher) {
       this.$refs[ruleteacher].validate(valid => {
         if (valid) {
           this.loading = true;
@@ -192,7 +183,7 @@ export default {
         }
       });
     },
-    editTeacher(ruleteacher) {
+    editTeacher (ruleteacher) {
       this.$refs[ruleteacher].validate(valid => {
         if (valid) {
           this.loading = true;
@@ -226,10 +217,10 @@ export default {
         }
       });
     },
-    resetForm(ruleteacher) {
+    resetForm (ruleteacher) {
       this.$refs[ruleteacher].resetFields();
     },
-    validateUniqueName(value, callback) {
+    validateUniqueName (value, callback) {
       teacherapi
         .validateUniqueName(value)
         .then(response => {

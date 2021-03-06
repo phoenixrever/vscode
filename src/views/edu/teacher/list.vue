@@ -3,15 +3,15 @@
     <h1>讲师列表</h1>
     <!-- https://element.eleme.cn/#/zh-CN/component/table el-table -->
     <searchform @searchParam="searchParam"></searchform>
-    <el-button type="success" @click="addTeacher" style="margin-bottom:20px"
+    <el-button type="success" @click="addTeacher" style="margin-bottom: 20px"
       >添加讲师</el-button
     >
     <router-link :to="'/teacher/save'">
-      <el-button type="warning" style="margin-bottom:20px"
+      <el-button type="warning" style="margin-bottom: 20px"
         >路由跳转组件演示</el-button
       >
     </router-link>
-    <el-button type="info" @click="routejump" style="margin-bottom:20px"
+    <el-button type="info" @click="routejump" style="margin-bottom: 20px"
       >路由跳转点击演示</el-button
     >
     <avatardialog
@@ -47,7 +47,7 @@
       <el-table-column label="头衔" width="80" align="center">
         <template slot-scope="scope">
           <!-- == 判断值 ===判断值和类型 -->
-          {{ scope.row.level === 1 ? "高级讲师" : "首席讲师" }}
+          {{ scope.row.level === 1 ? '高级讲师' : '首席讲师' }}
         </template>
       </el-table-column>
       <el-table-column label="Intro" align="center" width="200">
@@ -55,7 +55,7 @@
           <!-- 防止爆legthundefined错误 -->
           <span>{{
             scope.row.intro && scope.row.intro.length > 20
-              ? scope.row.intro.substring(0, 20) + "..."
+              ? scope.row.intro.substring(0, 20) + '...'
               : scope.row.intro
           }}</span>
         </template>
@@ -129,7 +129,7 @@
       :current-page="page"
       :page-size="limit"
       :total="total"
-      style="padding: 30px 0; text-align: right;"
+      style="padding: 30px 0; text-align: right"
       layout="total, prev, pager, next, jumper"
       @current-change="getList"
     />
@@ -138,10 +138,10 @@
 
 <script>
 //@是webpack配置的路径别名
-import teacher from "@/api/edu/teacher";
-import searchform from "./searchform";
-import teacherDialog from "./teacherDialog";
-import avatardialog from "./avatardialog";
+import teacher from '@/api/edu/teacher'
+import searchform from './searchform'
+import teacherDialog from './teacherDialog'
+import avatardialog from './avatardialog'
 
 export default {
   // filters: {
@@ -157,7 +157,7 @@ export default {
   components: {
     searchform,
     teacherDialog,
-    avatardialog
+    avatardialog,
   },
   // : 和() 都可以  组件中必须写成()组件数据才独立
   data() {
@@ -170,39 +170,39 @@ export default {
       total: 0,
       teacherList: {},
       avatarSrc:
-        "https://phoenixhell.oss-cn-shanghai.aliyuncs.com/2021/03/05/46ae2a8cacb8410385a1e018279a3cae.jpg"
-    };
+        'https://phoenixhell.oss-cn-shanghai.aliyuncs.com/2021/03/05/46ae2a8cacb8410385a1e018279a3cae.jpg',
+    }
   },
   created() {
     //页面渲染之前执行一般调用method里面的方法
-    this.getList();
+    this.getList()
   },
   methods: {
     //创建具体方法,调用teacher.js里面定义的方法
     //讲师列表
     searchParam(teacherList) {
-      this.teacherList = teacherList;
-      this.getList();
+      this.teacherList = teacherList
+      this.getList()
     },
     removeDataById(id, event) {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       }).then(() => {
         teacher
           .deleteTeacherById(id)
-          .then(response => {
-            this.getList();
+          .then((response) => {
+            this.getList()
           })
-          .catch(error => {
-            console.log(error);
-          });
+          .catch((error) => {
+            console.log(error)
+          })
         this.$message({
-          type: "success",
-          message: "删除成功!"
-        });
-      });
+          type: 'success',
+          message: '删除成功!',
+        })
+      })
       //catch统一不写 有的浏览器  框架本身执行一次 自己执行一次
       // .catch(() => {
       //   this.$message({
@@ -212,53 +212,53 @@ export default {
       // });
 
       //取消按钮选中状态
-      let target = event.target;
-      if (target.nodeName == "SPAN") {
-        target = event.target.parentNode;
+      let target = event.target
+      if (target.nodeName == 'SPAN') {
+        target = event.target.parentNode
       }
-      target.blur();
+      target.blur()
     },
     getList(page = 1) {
-      this.page = page;
-      this.listLoading = true;
+      this.page = page
+      this.listLoading = true
 
       teacher
         .getTeacherList(this.page, this.limit, this.teacherList)
-        .then(response => {
-          console.log(response);
-          this.list = response.data.items;
-          this.total = response.data.total;
-          this.listLoading = false;
+        .then((response) => {
+          console.log(response)
+          this.list = response.data.items
+          this.total = response.data.total
+          this.listLoading = false
         })
-        .catch(error => {
-          console.log(error);
-        });
+        .catch((error) => {
+          console.log(error)
+        })
     },
     addTeacher() {
-      const addTeacherDialog = this.$refs.teacherDialog;
-      addTeacherDialog.edit = false;
-      addTeacherDialog.dialogFormVisible = true;
+      const addTeacherDialog = this.$refs.teacherDialog
+      addTeacherDialog.edit = false
+      addTeacherDialog.dialogFormVisible = true
     },
     editTeacher(rowteacher) {
-      console.log(this.list);
-      const editTeacherDialog = this.$refs.teacherDialog;
-      editTeacherDialog.dialogFormVisible = true;
-      editTeacherDialog.edit = true;
+      console.log(this.list)
+      const editTeacherDialog = this.$refs.teacherDialog
+      editTeacherDialog.dialogFormVisible = true
+      editTeacherDialog.edit = true
       // editTeacherDialog.teacher = JSON.parse(JSON.stringify(rowteacher));
       // 使用对象拓展运算符，拷贝对象，而不是引用，
       // 否则新增一条记录后，defaultForm就变成了之前新增的teacher的值
-      editTeacherDialog.teacher = { ...rowteacher };
+      editTeacherDialog.teacher = { ...rowteacher }
     },
     routejump() {
-      this.$router.push({ path: "/teacher/save" });
+      this.$router.push({ path: '/teacher/save' })
     },
     openAvatarDialog() {
-      const avatardialog = this.$refs.avatardialog;
-      avatardialog.dialogVisible = true;
+      const avatardialog = this.$refs.avatardialog
+      avatardialog.dialogVisible = true
     },
     changeAvatarSrc(avatarSrc) {
-      this.avatarSrc = avatarSrc;
-    }
-  }
-};
+      this.avatarSrc = avatarSrc
+    },
+  },
+}
 </script>
