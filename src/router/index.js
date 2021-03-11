@@ -27,7 +27,7 @@ export const constantRouterMap = [
     component: () => import("@/views/login/index"),
     hidden: true
   },
-  { path: "/404", component: () => import("@/views/404"), hidden: true },
+  // { path: "/404", component: () => import("@/views/404"), hidden: true },
 
   {
     path: "/",
@@ -87,15 +87,60 @@ export const constantRouterMap = [
     children: [
       {
         path: "list",
-        name: "课程列表",
+        name: "课程分类列表",
         component: () => import("@/views/edu/subject/list"), //@/ 相当于./  当前路径
-        meta: { title: "课程列表", icon: "table" }
+        meta: { title: "课程分类列表", icon: "table" }
       },
       {
         path: "save",
         name: "添加课程分类",
         component: () => import("@/views/edu/subject/save"),
         meta: { title: "添加课程分类", icon: "tree" }
+      }
+    ]
+  },
+  {
+    path: "/course",
+    component: Layout,
+    redirect: "/course/list",
+    name: "课程管理",
+    meta: { title: "课程管理", icon: "form" },
+    children: [
+      {
+        path: "list",
+        name: "课程列表",
+        component: () => import("@/views/edu/course/list"), //@/ 相当于./  当前路径
+        meta: { title: "课程列表", icon: "table" }
+      },
+      {
+        path: "save",
+        name: "添加课程分类",
+        redirect: "/save/info/:id", //注释了一下莫名其妙好了
+        component: () => import("@/views/edu/course/addcourse"),
+        meta: { title: "添加课程分类", icon: "tree" },
+        children: [
+          {
+            path: "info/:id?", //:和react的:id 一样
+            name: "courseInfo",
+            component: () => import("@/views/edu/course/steps/info"),
+            meta: { title: "添加课程基本信息", noCache: true }
+            // hidden: true //隐藏此路由
+          },
+          {
+            path: "chapter/:id?", //:和react的:id 一样
+            name: "courseChapter",
+            component: () => import("@/views/edu/course/steps/chapter"),
+            meta: { title: "编辑课程大纲", noCache: true },
+            hidden: true //隐藏此路由
+          },
+          {
+            path: "publish/:id?", //:和react的:id 一样
+            name: "coursePublish",
+            component: () => import("@/views/edu/course/steps/publish"),
+            meta: { title: "发布课程", noCache: true },
+            hidden: true //隐藏此路由
+          }
+        ]
       }
     ]
   },
