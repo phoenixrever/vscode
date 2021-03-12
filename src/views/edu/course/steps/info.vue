@@ -95,29 +95,29 @@
 <script>
 // import Tinymce from "@/components/Tinymce";
 // import Editor from "@tinymce/tinymce-vue";
-import TinymceEditor from "@/views/editor/editor";
-import ImageUpload from "./imageUpload.vue";
-import subjectlist from "@/api/edu/subject";
-import course from "@/api/edu/course";
-import teacher from "@/api/edu/teacher";
+import TinymceEditor from '@/views/editor/editor'
+import ImageUpload from './imageUpload.vue'
+import subjectlist from '@/api/edu/subject'
+import course from '@/api/edu/course'
+import teacher from '@/api/edu/teacher'
 
 const defaultForm = {
-  title: "",
-  oneSubjectId: "",
-  twoSubjectId: "",
-  teacherId: "",
+  title: '',
+  oneSubjectId: '',
+  twoSubjectId: '',
+  teacherId: '',
   lessonNum: 0,
-  description: "Welcome to Use Tinymce Editor",
+  description: 'Welcome to Use Tinymce Editor',
   cover:
-    "https://phoenixhell.oss-cn-shanghai.aliyuncs.com/2021/03/05/46ae2a8cacb8410385a1e018279a3cae.jpg",
-  price: 0
-};
+    'https://phoenixhell.oss-cn-shanghai.aliyuncs.com/2021/03/05/46ae2a8cacb8410385a1e018279a3cae.jpg',
+  price: 0,
+}
 
 export default {
   // components: { Tinymce },
   components: {
     TinymceEditor,
-    ImageUpload
+    ImageUpload,
   },
   data() {
     return {
@@ -126,77 +126,77 @@ export default {
       oneSubjectList: [],
       teacherList: [],
       saveBtnDisabled: false,
-      disabled: false // 保存按钮是否禁用
-    };
-  },
-
-  watch: {
-    $route(to, from) {
-      console.log(to);
-      // this.init();
-      if (this.$route.params && this.$route.params.id) {
-        this.oneSubjectList.forEach(element => {
-          if (element.id === value) {
-            this.twoSubjectList = element.children;
-            // console.log(this.courseInfo.twosubjectList);
-          }
-        });
-      }
+      disabled: false, // 保存按钮是否禁用
     }
   },
-
-  created() {
-    // this.init();
-    this.getsubjectlist();
-    this.getTeacherlist();
+  watch: {
+    $route(to, from) {
+      console.log('watch------------------')
+    },
   },
-
+  created() {
+    this.getsubjectlist()
+    this.getTeacherlist()
+  },
   methods: {
     sujectChange(value) {
       // console.log(this.courseInfo);
-      this.twoSubjectId = "";
-      this.oneSubjectList.forEach(element => {
+      this.twoSubjectId = ''
+      this.oneSubjectList.forEach((element) => {
         if (element.id === value) {
-          this.twoSubjectList = element.children;
+          this.twoSubjectList = element.children
           // console.log(this.courseInfo.twosubjectList);
         }
-      });
+      })
+    },
+    getCourseById(id) {
+      course
+        .getCourseById(id)
+        .then((response) => {
+          // console.log(response)
+          this.courseInfo = response.data.courseInfo
+          this.oneSubjectList.forEach((element) => {
+            if (element.id === this.courseInfo.oneSubjectId) {
+              this.twoSubjectList = element.children
+            }
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
     changeCover(fileUrl) {
-      this.saveBtnDisabled = false;
-      this.courseInfo.cover = fileUrl;
+      this.saveBtnDisabled = false
+      this.courseInfo.cover = fileUrl
     },
     changeButton() {
-      this.saveBtnDisabled = true;
+      this.saveBtnDisabled = true
     },
     getsubjectlist() {
       subjectlist
         .subjectlist()
-        .then(response => {
+        .then((response) => {
           // console.log(response);
-          this.oneSubjectList = response.data.data;
-          // console.log(this.oneSubjectList);
+          this.oneSubjectList = response.data.data
+          this.init()
         })
-        .catch(error => {
-          console.log(error);
-        });
+        .catch((error) => {
+          console.log(error)
+        })
     },
     getTeacherlist() {
       teacher
         .getAllTeacher()
-        .then(response => {
-          this.teacherList = response.data.teachers;
+        .then((response) => {
+          this.teacherList = response.data.teachers
         })
-        .catch(error => {
-          console.log(error);
-        });
+        .catch((error) => {
+          console.log(error)
+        })
     },
     init() {
       if (this.$route.params && this.$route.params.id) {
-        const id = this.$route.params.id;
-        // console.log(id);
-      } else {
-        this.courseInfo = { ...defaultForm };
+        this.getCourseById(this.$route.params.id)
       }
     },
     onClick(e, editor) {
@@ -206,15 +206,15 @@ export default {
     },
     //清空内容
     clear() {
-      this.$refs.editor.clear();
+      this.$refs.editor.clear()
     },
 
     next() {
-      this.saveBtnDisabled = true;
+      this.saveBtnDisabled = true
       if (!this.courseInfo.id) {
-        this.saveData();
+        this.saveData()
       } else {
-        this.updateData();
+        this.updateData()
       }
     },
 
@@ -222,38 +222,38 @@ export default {
     saveData() {
       course
         .addCourse(this.courseInfo)
-        .then(response => {
-          console.log(response);
-          this.courseInfo.id = response.data.id;
-          console.log(this.courseInfo);
-          this.saveBtnDisabled = false;
-          if (this.$route.name === "courseInfo") {
+        .then((response) => {
+          console.log(response)
+          this.courseInfo.id = response.data.id
+          // console.log(this.courseInfo)
+          this.saveBtnDisabled = false
+          if (this.$route.name === 'courseInfo') {
             // console.log(this.$route.name);
             this.$router.push({
-              path: `/course/save/chapter/${this.courseInfo.id}`
-            });
-          } else if (this.$route.name === "courseChapter") {
+              path: `/course/save/chapter/${this.courseInfo.id}`,
+            })
+          } else if (this.$route.name === 'courseChapter') {
             // console.log(this.$route.name);
-            this.$router.push({ path: `/course/save/publish` });
+            this.$router.push({ path: `/course/save/publish` })
           }
           this.$message({
-            type: "success",
-            message: "保存成功!"
-          });
+            type: 'success',
+            message: '保存成功!',
+          })
         })
-        .catch(response => {
-          this.saveBtnDisabled = false;
+        .catch((response) => {
+          this.saveBtnDisabled = false
 
           this.$message({
-            type: "error",
-            message: response.message
-          });
-        });
+            type: 'error',
+            message: response.message,
+          })
+        })
     },
 
     updateData() {
-      this.$router.push({ path: "/edu/course/chapter/1" });
-    }
-  }
-};
+      this.$router.push({ path: '/edu/course/chapter/1' })
+    },
+  },
+}
 </script>

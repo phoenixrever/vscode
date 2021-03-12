@@ -1,21 +1,20 @@
 import request from "@/utils/request";
 
 export default {
-  getCourseById(Course) {
+  getCourseById(id) {
+    return request({
+      url: `/serviceEdu/eduCourse/get/${id}`,
+      method: "get"
+    });
+  },
+  addCourse(course) {
     return request({
       url: `/serviceEdu/eduCourse/add`,
       method: "post",
-      data: Course
+      data: course
     });
   },
-  addCourse(Course) {
-    return request({
-      url: `/serviceEdu/eduCourse/add`,
-      method: "post",
-      data: Course
-    });
-  },
-  editCourseById(Course) {
+  editCourseById(id) {
     return request({
       url: `/serviceEdu/Course/updateCourse`,
       method: "post",
