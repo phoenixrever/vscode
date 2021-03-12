@@ -27,7 +27,7 @@ export const constantRouterMap = [
     component: () => import("@/views/login/index"),
     hidden: true
   },
-  // { path: "/404", component: () => import("@/views/404"), hidden: true },
+  { path: "/404", component: () => import("@/views/404"), hidden: true },
 
   {
     path: "/",
@@ -115,7 +115,7 @@ export const constantRouterMap = [
       {
         path: "save",
         name: "添加课程分类",
-        redirect: "/save/info/:id", //注释了一下莫名其妙好了
+        redirect: "/save/info/:id?", //注释了一下莫名其妙好了
         component: () => import("@/views/edu/course/addcourse"),
         meta: { title: "添加课程分类", icon: "tree" },
         children: [

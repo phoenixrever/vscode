@@ -10,6 +10,12 @@ export default {
       data: teacherquery
     });
   },
+  getAllTeacher() {
+    return request({
+      url: `/serviceEdu/teacher/listAll`,
+      method: "get"
+    });
+  },
   deleteTeacherById(id) {
     return request({
       url: `/serviceEdu/teacher/delete/${id}`,

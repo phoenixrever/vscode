@@ -13,6 +13,7 @@
 
 <script>
 import Editor from "@tinymce/tinymce-vue";
+import editorImageUpload from "@/api/oss/editorImageUpload";
 
 export default {
   components: {
@@ -53,9 +54,10 @@ export default {
         //   const img = "data:image/jpeg;base64," + blobInfo.base64();
         //   success(img);
         // }
-        height: 300,
+        height: 200,
         resize: false,
         menubar: false,
+        branding: false,
         autosave_ask_before_unload: false,
         powerpaste_allow_local_images: true,
         /* without images_upload_url set, Upload tab won't show up*/
@@ -63,19 +65,29 @@ export default {
 
         /* we override default upload handler to simulate successful upload*/
         images_upload_handler: function(blobInfo, success, failure) {
-          setTimeout(function() {
-            /* no matter what you upload, we will turn it into TinyMCE logo :)*/
-            success("http://moxiecode.cachefly.net/tinymce/v9/images/logo.png");
-          }, 2000);
+          const form = new FormData();
+
+          form.append("file", blobInfo.blob(), blobInfo.filename());
+          // You can use axios, superagent and other libraries instead here
+          editorImageUpload
+            .editorImageUpload(form)
+            .then(response => {
+              console.log(response);
+              success(response.data.fileUrl);
+            })
+            .catch(error => {
+              console.log(error);
+              failure("fail");
+            });
         },
         plugins: [
-          "a11ychecker advcode advlist anchor autolink codesample fullscreen help image  imagetools ",
-          " lists link media noneditable powerpaste preview",
+          " advcode advlist anchor autolink codesample fullscreen help image  imagetools ",
+          " lists link media noneditable powerpaste preview ",
           " searchreplace table tinymcespellchecker visualblocks wordcount"
         ],
 
         toolbar:
-          " a11ycheck undo redo | bold italic | forecolor backcolor |  codesample | alignleft aligncenter alignright alignjustify | bullist numlist | link image   fullscreen ",
+          "  undo redo | bold italic | forecolor backcolor | table codesample | alignleft aligncenter alignright alignjustify | bullist numlist | link image   fullscreen ",
         spellchecker_dialog: true
       },
       myValue: this.value
@@ -88,7 +100,7 @@ export default {
     //添加相关的事件，可用的事件参照文档=> https://github.com/tinymce/tinymce-vue => All available events
     //需要什么事件可以自己增加
     onClick(e) {
-      this.$emit("onClick", e, tinymce);
+      // this.$emit("onClick", e, tinymce);
     },
     //可以添加一些自己的自定义事件，如清空内容
     clear() {
