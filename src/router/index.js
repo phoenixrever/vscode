@@ -115,26 +115,33 @@ export const constantRouterMap = [
       {
         path: "save",
         name: "添加课程分类",
-        redirect: "/save/info/:id?", //注释了一下莫名其妙好了
+        redirect: "/save/info", //注释了一下莫名其妙好了
         component: () => import("@/views/edu/course/addcourse"),
         meta: { title: "添加课程分类", icon: "tree" },
         children: [
           {
-            path: "info/:id?", //:和react的:id 一样
+            path: "info", //:和react的:id 一样
             name: "courseInfo",
             component: () => import("@/views/edu/course/steps/info"),
             meta: { title: "添加课程基本信息", noCache: true }
             // hidden: true //隐藏此路由
           },
           {
-            path: "chapter/:id?", //:和react的:id 一样
+            path: "info/:id", //:和react的:id 一样
+            name: "editCourseInfo",
+            component: () => import("@/views/edu/course/steps/info"),
+            meta: { title: "编辑课程基本信息", noCache: true },
+            hidden: true //隐藏此路由
+          },
+          {
+            path: "chapter/:id", //:和react的:id 一样
             name: "courseChapter",
             component: () => import("@/views/edu/course/steps/chapter"),
             meta: { title: "编辑课程大纲", noCache: true },
             hidden: true //隐藏此路由
           },
           {
-            path: "publish/:id?", //:和react的:id 一样
+            path: "publish/:id", //:和react的:id 一样
             name: "coursePublish",
             component: () => import("@/views/edu/course/steps/publish"),
             meta: { title: "发布课程", noCache: true },

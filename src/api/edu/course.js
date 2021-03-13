@@ -14,11 +14,11 @@ export default {
       data: course
     });
   },
-  editCourseById(id) {
+  editCourse(course) {
     return request({
-      url: `/serviceEdu/Course/updateCourse`,
-      method: "post",
-      data: Course
+      url: `/serviceEdu/eduCourse/update`,
+      method: "put",
+      data: course
     });
   },
   validateUniqueName(name) {
