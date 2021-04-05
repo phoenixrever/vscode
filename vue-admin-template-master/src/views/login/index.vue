@@ -41,14 +41,14 @@
         <el-button
           :loading="loading"
           type="primary"
-          style="width:100%;"
+          style="width: 100%"
           @click.native.prevent="handleLogin"
         >
           Sign in
         </el-button>
       </el-form-item>
       <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
+        <span style="margin-right: 20px">username: admin</span>
         <span> password: admin</span>
       </div>
     </el-form>
@@ -56,78 +56,80 @@
 </template>
 
 <script>
-import { isvalidUsername } from "@/utils/validate";
+import { isvalidUsername } from '@/utils/validate'
 
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!isvalidUsername(value)) {
-        callback(new Error("请输入正确的用户名"));
+        callback(new Error('请输入正确的用户名'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePass = (rule, value, callback) => {
       if (value.length < 5) {
-        callback(new Error("密码不能小于5位"));
+        callback(new Error('密码不能小于5位'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       loginForm: {
-        username: "admin",
-        password: "admin"
+        username: '',
+        password: '',
       },
       loginRules: {
         username: [
-          { required: true, trigger: "blur", validator: validateUsername }
+          { required: true, trigger: 'blur', validator: validateUsername },
         ],
-        password: [{ required: true, trigger: "blur", validator: validatePass }]
+        password: [
+          { required: true, trigger: 'blur', validator: validatePass },
+        ],
       },
       loading: false,
-      pwdType: "password",
-      redirect: undefined
-    };
+      pwdType: 'password',
+      redirect: undefined,
+    }
   },
   watch: {
     $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect;
+      handler: function (route) {
+        this.redirect = route.query && route.query.redirect
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
     showPwd() {
-      if (this.pwdType === "password") {
-        this.pwdType = "";
+      if (this.pwdType === 'password') {
+        this.pwdType = ''
       } else {
-        this.pwdType = "password";
+        this.pwdType = 'password'
       }
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true;
+          this.loading = true
           this.$store
-            .dispatch("Login", this.loginForm)
+            .dispatch('Login', this.loginForm)
             .then(() => {
-              this.loading = false;
-              this.$router.push({ path: this.redirect || "/" });
+              this.loading = false
+              this.$router.push({ path: this.redirect || '/' })
             })
             .catch(() => {
-              this.loading = false;
-            });
+              this.loading = false
+            })
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
-    }
-  }
-};
+      })
+    },
+  },
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
