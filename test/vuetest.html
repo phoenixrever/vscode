@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <h5 v-bind:title="message">{{content}}</h1>
+        <h5 :title="message">{{content}}</h1>
+
+        <input type="text" v-bind:value="searchMap.searchkey">
+        <input type="text" v-model="searchMap.searchkey">
+
+        <p>{{searchMap.searchkey}}</p>
+
+        <button v-on:click="search()">search</button>
+        <button @click="search()">@search</button>
+        <a v-bind:href="result.site">{{result.title}}</a>
+
+
+        <!-- 修饰符用于指出一个指令应该以特殊方式绑定。
+     这里的 .prevent 修饰符告诉 v-on 指令对于触发的事件调用js的 event.preventDefault()：
+     即阻止表单提交的默认行为 -->
+        <form action="www.baidu.com" v-on:submit.prevent="onsubmit()">
+            <label for="input"> 
+                <input type="text" id="input" v-model="user.username">
+                <button type="submit">save</button>
+            </label>
+        </form>
+
+        <input type="checkbox" v-model="ok">同意许可协议
+        <!-- v:if条件指令：还有v-else、v-else-if 切换开销大 -->
+        <h1 v-if="ok">if：Lorem ipsum dolor sit amet.</h1>
+        <h1 v-else>no</h1>
+
+        <!-- 1、简单的列表渲染 -->
+        <ul>
+            <li v-for="n in 10">{{ n }} </li>
+        </ul>
+        <ul>
+            <!-- 如果想获取索引，则使用index关键字，注意，圆括号中的index必须放在后面 -->
+            <li v-for="(n, index) in 5">{{ n }} - {{ index }} </li>
+        </ul>
+
+        <!-- 2、遍历数据列表 -->
+        <table border="1">
+            <!-- <tr v-for="item in userList"></tr> -->
+            <tr v-for="(item, index) in userList">
+                <td>{{index}}</td>
+                <td>{{item.id}}</td>
+                <td>{{item.username}}</td>
+                <td>{{item.age}}</td>
+            </tr>
+        </table>
+    </div>
+    <script src="vue.min.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                content: "v-bind",
+                message: new Date().toLocaleDateString(),
+                searchMap:{
+                    searchkey:"v-model 双向绑定"
+                },
+                result:{},
+                user:{},
+                ok: false,
+                userList: [
+                    { id: 1, username: 'helen', age: 18 },
+                    { id: 2, username: 'peter', age: 28 },
+                    { id: 3, username: 'andy', age: 38 }
+                ]
+            },
+            methods:{
+                search(){
+                   console.log('search') ,
+                   this.result={
+                       title:"phoenixhell",
+                       site: "www.phoenixhell.com"
+                   }
+                },
+                onsubmit(){
+                    if(this.user.username){
+                        console.log("submit");
+                    }else{
+                        console.log("username is null")
+                    }
+                }
+            }
+
+        })
+    </script>
+</body>
+
+</html>

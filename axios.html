@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <ul>
+        <li v-for="user in userList">{{user}}</li>
+      </ul>
+    </div>
+    <script src="js/vue.min.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          userList: [],
+        },
+        created() {
+          // created执行时，data 和 methods 都已经被初始化好了！页面没有渲染
+          //调用定义方法
+          //this不能少
+          this.getUserList();
+        },
+        methods: {
+          //编写具体方法
+          getUserList() {
+            axios
+              .get("data.json")
+              .then((reponse) => {
+                console.log(reponse);
+                this.userList = reponse.data.data.items;
+              })
+              .catch((error) => {
+                console.log("error:" + error);
+              });
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
