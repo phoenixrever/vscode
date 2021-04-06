@@ -23,6 +23,8 @@ router.beforeEach(async (to, from, next) => {
       NProgress.done();
     } else {
       // determine whether the user has obtained his permission roles through getInfo
+      console.log(store.getters.roles);
+
       const hasRoles = store.getters.roles && store.getters.roles.length > 0;
       console.log(hasRoles);
       if (hasRoles) {
@@ -31,14 +33,15 @@ router.beforeEach(async (to, from, next) => {
         try {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          const { roles } = await store.dispatch("GetInfo");
+          const response = await store.dispatch("GetInfo");
+          const roles = response.data.userInfo.roles;
           console.log(roles);
+
           // generate accessible routes map based on roles
           const accessRoutes = await store.dispatch(
             "permission/generateRoutes",
             roles
           );
-
           // dynamically add accessible routes
 
           router.addRoutes(accessRoutes);
@@ -46,6 +49,7 @@ router.beforeEach(async (to, from, next) => {
           next({ ...to, replace: true });
         } catch (error) {
           // remove token and go to login page to re-login
+          console.log(error);
           await store.dispatch("FedLogOut");
           Message.error(error || "Has Error");
           next(`/login?redirect=${to.path}`);

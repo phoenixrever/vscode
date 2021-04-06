@@ -25,9 +25,15 @@ export function logout() {
   });
 }
 // 获取菜单权限数据
+// export function getMenu() {
+//   return request({
+//     url: "/serviceAcl/index/menu",
+//     method: "get"
+//   });
+// 获取菜单权限数据
 export function getMenu() {
   return request({
-    url: "/serviceAcl/index/menu",
+    url: "/serviceAcl/aclPermission/listAll3/2",
     method: "get"
   });
 }

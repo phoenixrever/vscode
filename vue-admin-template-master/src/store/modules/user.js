@@ -62,7 +62,7 @@ const user = {
         getInfo(state.token)
           .then(response => {
             // debugger
-            // console.log(response);
+            console.log("getinfo--------------");
             const userInfo = response.data.userInfo;
             if (userInfo.roles && userInfo.roles.length > 0) {
               // 验证返回的roles是否是一个非空数组
@@ -72,10 +72,11 @@ const user = {
             }
 
             const buttonAuthList = [];
-            userInfo.permissionList.forEach(button => {
-              buttonAuthList.push(button);
-            });
-
+            if (userInfo.permissionList.length > 0) {
+              userInfo.permissionList.forEach(button => {
+                buttonAuthList.push(button);
+              });
+            }
             commit("SET_NAME", userInfo.name);
             commit("SET_AVATAR", userInfo.avatar);
             commit("SET_BUTTONS", buttonAuthList);
