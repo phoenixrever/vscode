@@ -6,5 +6,11 @@ export default {
       url: `/serviceAcl/index/menu`,
       method: "get"
     });
+  },
+  addOneSubject() {
+    return request({
+      url: `/serviceAcl/index/menu/add`,
+      method: "get"
+    });
   }
 };
