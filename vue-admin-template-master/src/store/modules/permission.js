@@ -45,12 +45,10 @@ const mutations = {
 const actions = {
   async generateRoutes({ commit }, roles) {
     // 取后台路由
-    console.log("generateRoutes");
     const asyncRouter = await getMenu();
 
     return new Promise(resolve => {
       const tmp = asyncRouter.data.permissionList[0].children;
-      console.log(tmp);
       const accessedRoutes = filterAsyncRouter(tmp);
       commit("SET_ROUTES", accessedRoutes);
       resolve(accessedRoutes);

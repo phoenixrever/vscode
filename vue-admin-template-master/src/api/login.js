@@ -27,7 +27,7 @@ export function logout() {
 // 获取菜单权限数据;
 export function getMenu() {
   return request({
-    url: "/serviceAcl/index/menu/1",
+    url: "/serviceAcl/index/menu",
     method: "get"
   });
   // 获取菜单权限数据

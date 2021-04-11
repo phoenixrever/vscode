@@ -38,6 +38,7 @@ export const constantRoutes = [
     children: [
       {
         path: "dashboard",
+        name: "sasdsd",
         component: () => import("@/views/dashboard/index"),
         meta: { title: "谷粒学院后台首页", icon: "dashboard" }
       }
@@ -121,10 +122,10 @@ export const asyncRoutes = [
       },
       {
         path: "save",
-        name: "添加课程分类",
+        name: "课程操作",
         redirect: "/course/save/info", //注redirect要从根路由算起
         component: () => import("@/views/edu/course/addcourse"),
-        meta: { title: "添加课程分类", icon: "tree" },
+        meta: { title: "课程操作", icon: "tree" },
         children: [
           {
             path: "info", //:和react的:id 一样
